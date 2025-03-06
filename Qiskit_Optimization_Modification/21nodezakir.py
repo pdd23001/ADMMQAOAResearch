@@ -5,37 +5,18 @@ Created on Thu Nov 6 11:30:32 2024
 @author: mzh21002
 """
 from docplex.mp.model import Model
-from qiskit_algorithms import QAOA,NumPyMinimumEigensolver
-from qiskit_algorithms.optimizers import COBYLA
+from qiskit_algorithms.minimum_eigensolvers import QAOA
+from qiskit_algorithms.optimizers import COBYLA, SPSA
 from qiskit.primitives import Sampler
 from qiskit_optimization.algorithms import CobylaOptimizer, MinimumEigenOptimizer
 from qiskit_optimization.algorithms.admm_optimizer import ADMMParameters, ADMMOptimizer
 from qiskit_optimization.translators import from_docplex_mp
 import networkx as nx
 
-from collections.abc import Sequence
-from typing import Any
-
-import numpy as np
-
-from qiskit.circuit import QuantumCircuit
-from qiskit.exceptions import QiskitError
-from qiskit.quantum_info import Statevector
-from qiskit.result import QuasiDistribution
-from qiskit.utils.deprecation import deprecate_func
-
-from .base import BaseSampler, SamplerResult
-from .primitive_job import PrimitiveJob
-from .utils import (
-    _circuit_key,
-    bound_circuit_to_instruction,
-    final_measurement_mapping,
-    init_circuit,
-)
 
 
-cobyla = CobylaOptimizer()
-qaoa = MinimumEigenOptimizer(QAOA(sampler=Sampler(), optimizer=COBYLA()))
+cobyla = COBYLA()
+qaoa = MinimumEigenOptimizer(QAOA(sampler=Sampler(), optimizer=SPSA()))
 
 G = nx.Graph()
 #G.add_edges_from([(2, 3), (2, 5), (2, 1), (1, 4), (1, 5), (3, 4), (3, 6), (3, 5), (4, 5), (4, 6), (5, 6)])
@@ -53,13 +34,10 @@ print("QUBO Problem:")
 print(qp.prettyprint())
 qubo_optimizer= qaoa
 
-admm_params = ADMMParameters(rho_initial=1, beta=10, factor_c=1, maxiter=50, three_block=False, tol=1.0e-4)
-admm = ADMMOptimizer(params=admm_params, continuous_optimizer=CobylaOptimizer())
+admm_params = ADMMParameters(rho_initial=1, beta=50, factor_c=900, maxiter=100, three_block=False, tol=1.0e-6)
+admm = ADMMOptimizer(params=admm_params, continuous_optimizer=CobylaOptimizer(), qubo_optimizer=qubo_optimizer)
 
 
 result = admm.solve(qp)
 print("Optimization Result:")
 print(result.prettyprint())
-
-
-]
