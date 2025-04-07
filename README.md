@@ -8,4 +8,4 @@ I have solved the 21 node using the pure QUBO solution approach instead of MBO (
 
 I highly recommend having knowledge of both ADMM and VQAs to better undersatnd the code. Qiskit tutorials at https://qiskit-community.github.io/qiskit-optimization/tutorials/05_admm_optimizer.html and https://qiskit-community.github.io/qiskit-algorithms/stubs/qiskit_algorithms.QAOA.html will help for sure!
 
-Thanks so much for looking at my repo!
+Thank you so much for looking at my repo!
