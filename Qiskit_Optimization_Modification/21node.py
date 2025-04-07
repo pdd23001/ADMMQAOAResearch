@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 6 11:30:32 2024
-
-@author: mzh21002
-"""
 from docplex.mp.model import Model
 from qiskit_algorithms import QAOA
 from qiskit_algorithms.optimizers import COBYLA
